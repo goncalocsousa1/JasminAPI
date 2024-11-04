@@ -1,14 +1,10 @@
-// services/dbservice.js
-import fs from 'fs/promises';
-import path from 'path';
-import db from '../database/database.js'; // Importa a instância do lowdb
-import {getAccessToken} from './token.js';
+import {getAccessToken} from '../token.js';
 
 // Função para obter todos os posts
 
 
 // Função para obter todos os posts
-export const getAllinvoices = async () => {
+export const getAllInvoices  = async () => {
   const token = getAccessToken();
   
   try {
