@@ -79,13 +79,3 @@ export async function getAccessToken() {
     return data.access_token;
 }
 
-// Exemplo de uso
-(async () => {
-    try {
-        const token = await getAccessToken();
-        console.log("Token de Acesso:", token);
-        // Aqui você pode fazer qualquer outra coisa com o token, se necessário.
-    } catch (error) {
-        console.error(error);
-    }
-})();
