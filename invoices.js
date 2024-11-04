@@ -27,7 +27,7 @@ async function getAccessToken() {
             scope: 'application'
         })
     });
-
+    
     if (!response.ok) {
         const errorDetail = await response.text();
         throw new Error(`Erro ao obter token: ${response.status} - ${errorDetail}`);

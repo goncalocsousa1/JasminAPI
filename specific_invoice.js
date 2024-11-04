@@ -27,6 +27,7 @@ async function getAccessToken() {
             scope: 'application'
         })
     });
+    
 
     if (!response.ok) {
         const errorDetail = await response.text();
@@ -34,7 +35,9 @@ async function getAccessToken() {
     }
 
     const data = await response.json();
+    console.log(data);
     return data.access_token; // Retorna o token de acesso
+    
 }
 
 // Função para buscar as faturas
