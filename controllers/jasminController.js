@@ -1,4 +1,5 @@
 import { getAllInvoices, getInvoiceByParams } from "../services/invoices.js"; 
+import { getAllOrders } from "../services/order.js"; 
 
 export const getAllinvoices = async (req, res) => {
     try {
@@ -17,5 +18,14 @@ export const getInvoiceByParamsController = async (req, res) => {
         res.status(200).json(invoice); 
     } catch (error) {
         res.status(500).json({ message: 'Erro ao buscar fatura!', error: error.message });
+    }
+};
+
+export const getAllOrdersController = async (req, res) => {
+    try {
+        const invoices = await getAllOrders(); 
+        res.status(200).json(invoices); 
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar as encomendas!', error: error.message });
     }
 };
