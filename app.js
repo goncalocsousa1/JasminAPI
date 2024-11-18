@@ -14,6 +14,9 @@ app.use(express.json());
 // Usa o roteador montado para a rota /invoices
 app.use('/invoices', invoicesRoute);
 
+//Rota para ir buscar fatura específica
+
+//api para ir buscar informações dos clientes
 const port = 8080;
 app.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);
