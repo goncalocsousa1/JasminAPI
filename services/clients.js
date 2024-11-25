@@ -53,3 +53,29 @@ export const getClientbykey = async (key) => {
         throw new Error("Falha ao buscar cliente específico. Verifique o serviço e a URL.");
     }
 };
+
+export const createClient = async (clientData) => {
+    const token = await getAccessToken();
+    const url = `${BASE_URL}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(clientData),
+        });
+
+        if (!response || !response.ok) {
+            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
+            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Erro ao criar cliente:", error.message);
+        throw new Error("Falha ao criar cliente. Verifique o serviço e a URL.");
+    }
+};

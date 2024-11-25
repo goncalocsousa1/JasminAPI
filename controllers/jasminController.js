@@ -1,6 +1,6 @@
 import { getAllInvoices, getInvoiceByParams } from "../services/invoices.js"; 
 import { getAllOrders, getOrdersByParams , postOrder} from "../services/order.js"; 
-import { getAllClients , getClientbykey} from "../services/clients.js"; 
+import { getAllClients , getClientbykey, createClient} from "../services/clients.js"; 
 import { getAllMaterials, getMaterialByKey} from "../services/materials.js"; 
 
 export const getAllinvoices = async (req, res) => {
@@ -90,4 +90,18 @@ export const getMaterialByKeyController = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: `Erro ao buscar o material com itemKey ${itemKey}`, error: error.message });
     }
+};
+
+
+export const createClientController = async (req,res) => {
+    const clientData = req.body;  
+
+    try {
+        const newClient= await createClient(clientData);  
+        res.status(201).json(newClient);     
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao criar cliente!', error: error.message });
+    }
+
+
 };
