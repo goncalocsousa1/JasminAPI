@@ -1,6 +1,6 @@
 import { getAllInvoices, getInvoiceByParams } from "../services/invoices.js"; 
 import { getAllOrders, getOrdersByParams , postOrder} from "../services/order.js"; 
-import { getAllClients } from "../services/clients.js"; 
+import { getAllClients , getClientbykey} from "../services/clients.js"; 
 
 
 export const getAllinvoices = async (req, res) => {
@@ -59,5 +59,15 @@ export const getAllClientsController = async (req, res) => {
         res.status(200).json(clients); 
     } catch (error) {
         res.status(500).json({ message: 'Erro ao buscar clientes!', error: error.message });
+    }
+};
+export const getClientByKeyController = async (req, res) => {
+    const { key } = req.params;  
+
+    try {
+        const client = await getClientbykey(key); 
+        res.status(200).json(client); 
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar cliente!', error: error.message });
     }
 };
