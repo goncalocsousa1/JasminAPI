@@ -4,7 +4,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import invoicesRoute from './routes/invoicesRoute.js'; 
 import ordersRoute from './routes/ordersRoute.js'; 
-import  clientsRoute from './routes/clientsRoute.js'
+import  clientsRoute from './routes/clientsRoute.js';
+import  materialsRoute from './routes/materialsRoute.js';
+
 
 const app = express();
 
@@ -19,6 +21,8 @@ app.use('/invoices', invoicesRoute);
 app.use('/orders', ordersRoute);
 //Rota para ir buscar cliente
 app.use('/clients', clientsRoute);
+//Rota para ir buscar ite
+app.use('/materials', materialsRoute);
 //api para ir buscar informações dos clientes
 const port = 8080;
 app.listen(port, () => {
