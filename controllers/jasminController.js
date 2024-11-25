@@ -1,5 +1,7 @@
 import { getAllInvoices, getInvoiceByParams } from "../services/invoices.js"; 
 import { getAllOrders, getOrdersByParams , postOrder} from "../services/order.js"; 
+import { getAllClients } from "../services/clients.js"; 
+
 
 export const getAllinvoices = async (req, res) => {
     try {
@@ -41,14 +43,21 @@ export const getOrderByParamsController = async (req, res) => {
 };
 
 export const createOrderController = async (req, res) => {
-    const orderData = req.body;  // Pega os dados da requisição (o corpo do POST)
+    const orderData = req.body;  
 
     try {
-        const newOrder = await postOrder(orderData);  // Chama a função postOrder para enviar os dados
-        res.status(201).json(newOrder);  // Retorna a encomenda criada com sucesso
+        const newOrder = await postOrder(orderData);  
+        res.status(201).json(newOrder);     
     } catch (error) {
         res.status(500).json({ message: 'Erro ao criar a encomenda!', error: error.message });
     }
 };
 
-
+export const getAllClientsController = async (req, res) => {
+    try {
+        const clients = await getAllClients(); 
+        res.status(200).json(clients); 
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar clientes!', error: error.message });
+    }
+};

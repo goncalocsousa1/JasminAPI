@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import invoicesRoute from './routes/invoicesRoute.js'; 
 import ordersRoute from './routes/ordersRoute.js'; 
+import  clientsRoute from './routes/clientsRoute.js'
 
 const app = express();
 
@@ -16,8 +17,8 @@ app.use(express.json());
 app.use('/invoices', invoicesRoute);
 // Usa o roteador montado para a rota /invoices
 app.use('/orders', ordersRoute);
-//Rota para ir buscar fatura específica
-
+//Rota para ir buscar cliente
+app.use('/clients', clientsRoute);
 //api para ir buscar informações dos clientes
 const port = 8080;
 app.listen(port, () => {
