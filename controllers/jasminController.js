@@ -1,7 +1,7 @@
 import { getAllInvoices, getInvoiceByParams } from "../services/invoices.js"; 
 import { getAllOrders, getOrdersByParams , postOrder} from "../services/order.js"; 
 import { getAllClients , getClientbykey} from "../services/clients.js"; 
-import { getAllMaterials} from "../services/materials.js"; 
+import { getAllMaterials, getMaterialByKey} from "../services/materials.js"; 
 
 export const getAllinvoices = async (req, res) => {
     try {
@@ -78,5 +78,16 @@ export const getAllMaterialsController = async (req, res) => {
         res.status(200).json(Items);  
     } catch (error) {
         res.status(500).json({ message: 'Erro ao buscar Itens!', error: error.message });
+    }
+};
+
+export const getMaterialByKeyController = async (req, res) => {
+    const { itemKey } = req.params;
+
+    try {
+        const material = await getMaterialByKey(itemKey);
+        res.status(200).json(material);
+    } catch (error) {
+        res.status(500).json({ message: `Erro ao buscar o material com itemKey ${itemKey}`, error: error.message });
     }
 };
