@@ -72,6 +72,19 @@ export const getClientByKeyController = async (req, res) => {
     }
 };
 
+export const createClientController = async (req,res) => {
+    const clientData = req.body;  
+
+    try {
+        const newClient= await createClient(clientData);  
+        res.status(201).json(newClient);     
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao criar cliente!', error: error.message });
+    }
+
+
+};
+
 export const getAllMaterialsController = async (req, res) => {
     try {
         const Items = await getAllMaterials(); 
@@ -93,15 +106,3 @@ export const getMaterialByKeyController = async (req, res) => {
 };
 
 
-export const createClientController = async (req,res) => {
-    const clientData = req.body;  
-
-    try {
-        const newClient= await createClient(clientData);  
-        res.status(201).json(newClient);     
-    } catch (error) {
-        res.status(500).json({ message: 'Erro ao criar cliente!', error: error.message });
-    }
-
-
-};

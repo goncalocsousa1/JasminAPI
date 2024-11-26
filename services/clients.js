@@ -50,7 +50,7 @@ export const getClientbykey = async (key) => {
         return await response.json();
     } catch (error) {
         console.error("Erro ao obter cliente específico:", error.message);
-        throw new Error("Falha ao buscar cliente específico. Verifique o serviço e a URL.");
+        throw new Error("Falha ao obter cliente específico. Verifique o serviço e a URL.");
     }
 };
 
