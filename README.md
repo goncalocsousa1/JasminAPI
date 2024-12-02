@@ -27,19 +27,19 @@ Depois é também preciso criar um token.js onde terá de conter o seguinte:
 #### `GET AllInvoices`
 
 - **Descrição:** Obtém uma lista de todas as faturas.
-- **Exemplo de URL:** `/invoices/allinvoices`
+- **Exemplo de URL:** `/invoices`
 
 #### `GET InvoicesByKey`
 
 - **Descrição:** Obtém detalhes de uma fatura específica através de uma chave única.
-- **Exemplo de URL:** `/invoices/invoicesbykey/{key}`
+- **Exemplo de URL:** `/invoices/{key}`
 
 ### **Encomendas (Orders)**
 
 #### `POST CreateOrder`
 
 - **Descrição:** Cria uma nova encomenda no sistema.
-- **Exemplo de URL:** `/orders/createorder`
+- **Exemplo de URL:** `/orders`
 - **Exemplo de corpo (body):**
 
 ```
@@ -58,19 +58,19 @@ Depois é também preciso criar um token.js onde terá de conter o seguinte:
 #### `GET getAllOrders`
 
 - **Descrição:** Obtém uma lista de todas as encomendas.
-- **Exemplo de URL:** `/orders/getallorders`
+- **Exemplo de URL:** `/orders`
 
 #### `GET getSpecificOrder`
 
 - **Descrição:** Obtém detalhes de uma encomenda específica através de uma chave única.
-- **Exemplo de URL:** `/orders/getspecificorder/{key}`
+- **Exemplo de URL:** `/orders/{key}`
 
 ### **Clientes (Client)**
 
 #### `POST CreateClient`
 
 - **Descrição:** Cria um novo cliente no sistema.
-- **Exemplo de URL:** `/client/createclient`
+- **Exemplo de URL:** `/clients`
 - **Exemplo de corpo (body):**
 ```
 {
@@ -101,20 +101,25 @@ Depois é também preciso criar um token.js onde terá de conter o seguinte:
 #### `GET getAllClients`
 
 - **Descrição:** Obtém uma lista de todos os clientes.
-- **Exemplo de URL:** `/client/getallclients`
+- **Exemplo de URL:** `/clients`
 
 #### `GET getClientByKey`
 
 - **Descrição:** Obtém detalhes de um cliente específico através de uma chave única.
-- **Exemplo de URL:** `/client/getclientbykey/{key}`
+- **Exemplo de URL:** `/clients/{key}`
 ### **Materiais (Materials)**
 
 #### `GET getAllMaterials`
 
 - **Descrição:** Obtém uma lista de todos os materiais disponíveis.
-- **Exemplo de URL:** `/materials/getallmaterials`
+- **Exemplo de URL:** `/materials`
 
 #### `GET getMaterialByKey`
 
 - **Descrição:** Obtém detalhes de um material específico através de uma chave única.
-- **Exemplo de URL:** `/materials/getmaterialbykey/{key}`
+- **Exemplo de URL:** `/materials/{key}`
+
+#### `GET getMaterialById`
+
+- **Descrição:** Obtém detalhes de um material específico através de um ID único.
+- **Exemplo de URL:** `/materials/{ID}`

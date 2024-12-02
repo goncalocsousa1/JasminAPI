@@ -21,7 +21,7 @@ app.use('/invoices', invoicesRoute);
 app.use('/orders', ordersRoute);
 //Rota para ir buscar cliente
 app.use('/clients', clientsRoute);
-//Rota para ir buscar ite
+//Rota para ir buscar item
 app.use('/materials', materialsRoute);
 //api para ir buscar informações dos clientes
 const port = 8080;
