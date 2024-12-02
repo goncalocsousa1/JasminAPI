@@ -30,7 +30,7 @@ export const getAllMaterials = async () => {
 
 export const getMaterialByKey = async (itemKey) => {
     const token = await getAccessToken();
-    const url = `${BASE_URL}/${itemKey}/extension`;
+    const url = `${BASE_URL}/${itemKey}`;
 
     try {
         const response = await fetch(url, {
