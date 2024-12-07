@@ -120,10 +120,6 @@ export const filterClientData = (clientData) => {
         city: clientData.cityName,
         address: `${clientData.streetName || ''} ${clientData.buildingNumber || ''}`.trim(),
         postalZone: clientData.postalZone || null,
-        priceList: {
-            code: clientData.priceList,
-            description: clientData.priceListDescription,
-        },
         paymentMethod: {
             code: clientData.paymentMethod,
             description: clientData.paymentMethodDescription,
