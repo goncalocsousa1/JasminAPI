@@ -24,7 +24,7 @@ app.use('/clients', clientsRoute);
 //Rota para ir buscar item
 app.use('/materials', materialsRoute);
 //api para ir buscar informações dos clientes
-const port = 8080;
+const port = 9090;
 app.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);
 });

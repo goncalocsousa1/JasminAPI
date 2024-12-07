@@ -7,7 +7,6 @@ export const getAllClients = async () => {
     const url = `${BASE_URL}/odata`;
 
     try {
-
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -21,20 +20,29 @@ export const getAllClients = async () => {
             throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
         }
 
-        return await response.json(); 
+        const clientDataArray = await response.json();
+        const clients = Array.isArray(clientDataArray) ? clientDataArray : clientDataArray.items;
+
+        if (!Array.isArray(clients)) {
+            throw new Error("O formato da resposta não contém uma lista de clientes válida.");
+        }
+
+        // Aplicar o filtro
+        return clients.map(filterClientData);
+
     } catch (error) {
         console.error("Erro ao obter todos os clientes:", error.message);
-        throw new Error("Falha ao buscar cliente. Verifique o serviço e a URL.");
+        throw new Error("Falha ao buscar clientes. Verifique o serviço e a URL.");
     }
 };
 
-export const getClientbykey = async (key) => {
-    const token = await getAccessToken();
 
+export const getClientbykey = async (key) => {
     const url = `${BASE_URL}/${key}`;
+    let token = await getAccessToken();
 
     try {
-        const response = await fetch(url, {
+        let response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -42,17 +50,32 @@ export const getClientbykey = async (key) => {
             },
         });
 
-        if (!response || !response.ok) {
-            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
-            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        // Token inválido: gere um novo e tente novamente
+        if (response.status === 401) {
+            console.warn("Token expirado ou inválido. Gerando um novo token...");
+            token = await getAccessToken(true);
+            response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
         }
 
-        return await response.json();
+        if (!response.ok) {
+            const errorDetail = await response.text();
+            throw new Error(`Erro na resposta: ${response.status} - ${errorDetail}`);
+        }
+
+        const clientData = await response.json();
+        return filterClientData(clientData); // Filtrar os dados antes de retornar
     } catch (error) {
         console.error("Erro ao obter cliente específico:", error.message);
         throw new Error("Falha ao obter cliente específico. Verifique o serviço e a URL.");
     }
 };
+
 
 export const createClient = async (clientData) => {
     const token = await getAccessToken();
@@ -78,4 +101,37 @@ export const createClient = async (clientData) => {
         console.error("Erro ao criar cliente:", error.message);
         throw new Error("Falha ao criar cliente. Verifique o serviço e a URL.");
     }
+};
+
+export const filterClientData = (clientData) => {
+    return {
+        id: clientData.id,
+        name: clientData.name,
+        email: clientData.electronicMail || null,
+        telephone: clientData.telephone || null,
+        mobile: clientData.mobile || null,
+        contactName: clientData.contactName || null,
+        createdOn: clientData.createdOn,
+        modifiedOn: clientData.modifiedOn,
+        country: {
+            code: clientData.country,
+            description: clientData.countryDescription,
+        },
+        city: clientData.cityName,
+        address: `${clientData.streetName || ''} ${clientData.buildingNumber || ''}`.trim(),
+        postalZone: clientData.postalZone || null,
+        priceList: {
+            code: clientData.priceList,
+            description: clientData.priceListDescription,
+        },
+        paymentMethod: {
+            code: clientData.paymentMethod,
+            description: clientData.paymentMethodDescription,
+        },
+        customerGroup: {
+            code: clientData.customerGroup,
+            description: clientData.customerGroupDescription,
+        },
+        isActive: clientData.isActive,
+    };
 };
