@@ -27,3 +27,29 @@ export const getAllOrdersPurchases = async () => {
         throw new Error("Falha ao buscar encomendas. Verifique o serviço e a URL.");
     }
 };
+
+export const getOrdersPurchasesByID = async (ID) => {
+    const token = await getAccessToken();
+
+    const url = `${BASE_URL}/${ID}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response || !response.ok) {
+            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
+            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Erro ao obter encomenda específica:", error.message);
+        throw new Error("Falha ao buscar encomenda específica. Verifique o serviço e a URL.");
+    }
+};

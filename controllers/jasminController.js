@@ -2,7 +2,7 @@ import { getAllInvoices, getInvoiceByParams } from "../services/invoices.js";
 import { getAllOrders, getOrdersByParams , postOrder} from "../services/order.js"; 
 import { getAllClients , getClientbykey, createClient} from "../services/clients.js"; 
 import { getAllMaterials, getMaterialByKey, getMaterialById} from "../services/materials.js"; 
-import { getAllOrdersPurchases} from "../services/purchases.js"; 
+import { getAllOrdersPurchases, getOrdersPurchasesByID} from "../services/purchases.js"; 
 
 
 export const getAllinvoices = async (req, res) => {
@@ -121,6 +121,15 @@ export const getAllOrdersPurchasesController = async (req, res) => {
         const Items = await getAllOrdersPurchases(); 
         res.status(200).json(Items);  
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao buscar Itens!', error: error.message });
+        res.status(500).json({ message: 'Erro ao buscar Purchases!', error: error.message });
+    }
+};
+export const getAllOrdersPurchasesIDController = async (req, res) => {
+    const { ID } = req.params;  
+    try {
+        const Items = await getOrdersPurchasesByID(ID); 
+        res.status(200).json(Items);  
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar Purchases!', error: error.message });
     }
 };
