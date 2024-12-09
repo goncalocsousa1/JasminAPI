@@ -4,7 +4,7 @@ const BASE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${proc
 
 export const getAllClients = async () => {
     const token = await getAccessToken();
-    const url = `${BASE_URL}/odata?select=*`;
+    const url = `${BASE_URL}/odata?$select=*`;
 
     try {
         const response = await fetch(url, {
