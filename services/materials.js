@@ -10,7 +10,7 @@ export const getAllMaterials = async () => {
 
         const response = await fetch(url, {
             method: 'GET',
-            headers: {
+            headers: { 
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
