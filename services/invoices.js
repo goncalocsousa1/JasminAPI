@@ -4,7 +4,7 @@ const BASE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${proc
 
 export const getAllInvoices = async () => {
     const token = await getAccessToken();
-    const url = `${BASE_URL}/odata`;
+    const url = `${BASE_URL}/odata?$select=postingDate,buyerCustomerPartyName,accountingPartyTaxId,payableAmountAmount`;
 
     try {
 
