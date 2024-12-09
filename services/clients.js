@@ -4,7 +4,7 @@ const BASE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${proc
 
 export const getAllClients = async () => {
     const token = await getAccessToken();
-    const url = `${BASE_URL}/odata`;
+    const url = `${BASE_URL}/odata/?$select=*`;
 
     try {
         const response = await fetch(url, {
@@ -20,15 +20,8 @@ export const getAllClients = async () => {
             throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
         }
 
-        const clientDataArray = await response.json();
-        const clients = Array.isArray(clientDataArray) ? clientDataArray : clientDataArray.items;
-
-        if (!Array.isArray(clients)) {
-            throw new Error("O formato da resposta não contém uma lista de clientes válida.");
-        }
-
-        // Aplicar o filtro
-        return clients.map(filterClientData);
+        return await response.json();
+        
 
     } catch (error) {
         console.error("Erro ao obter todos os clientes:", error.message);
