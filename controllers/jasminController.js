@@ -133,3 +133,13 @@ export const getAllOrdersPurchasesIDController = async (req, res) => {
         res.status(500).json({ message: 'Erro ao buscar Purchases!', error: error.message });
     }
 };
+export const createOrderPurchaseController = async (req, res) => {
+    const orderData = req.body;  
+
+    try {
+        const newOrder = await postOrder(orderData);  
+        res.status(201).json(newOrder);     
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao criar a encomenda!', error: error.message });
+    }
+};

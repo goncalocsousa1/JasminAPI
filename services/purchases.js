@@ -53,3 +53,32 @@ export const getOrdersPurchasesByID = async (ID) => {
         throw new Error("Falha ao buscar encomenda específica. Verifique o serviço e a URL.");
     }
 };
+export const postPurchaseOrder = async (orderData) => {
+    const token = await getAccessToken();
+
+    if (!token) {
+        throw new Error("Token de acesso não encontrado.");
+    }
+
+    try {
+        const response = await fetch(BASE_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData),  
+        });
+
+        if (!response.ok) {
+            const errorDetail = await response.json().catch(() => response.text()); 
+            const errorMessage = errorDetail?.message || `Erro desconhecido: ${response.status}`;
+            throw new Error(`Erro ao criar o pedido de vendas: ${response.status} - ${errorMessage}`);
+        }
+
+        return await response.json(); 
+    } catch (error) {
+        console.error("Erro ao criar pedido de encomenda:", error.message);
+        throw new Error("Falha ao enviar o pedido de encomenda. Verifique os dados e o serviço.");
+    }
+};
