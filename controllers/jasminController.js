@@ -1,7 +1,7 @@
 import { getAllInvoices, getInvoiceByParams } from "../services/invoices.js"; 
 import { getAllOrders, getOrdersByParams , postOrder} from "../services/order.js"; 
 import { getAllClients , getClientbykey, createClient} from "../services/clients.js"; 
-import { getAllMaterials, getMaterialByKey, getMaterialById} from "../services/materials.js"; 
+import { getAllMaterials, getMaterialByKey, getMaterialById, getMaterialImageById} from "../services/materials.js"; 
 import { getAllOrdersPurchases, getOrdersPurchasesByID} from "../services/purchases.js"; 
 
 
@@ -141,5 +141,17 @@ export const createOrderPurchaseController = async (req, res) => {
         res.status(201).json(newOrder);     
     } catch (error) {
         res.status(500).json({ message: 'Erro ao criar a encomenda!', error: error.message });
+    }
+};
+
+export const getMaterialImageByIdController = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const material = await getMaterialImageById(id);
+        //const image = material;
+        res.status(200).json(material);
+    } catch (error) {
+        res.status(500).json({ message: `Erro ao buscar a imagem do material com itemKey ${id}`, error: error.message });
     }
 };
