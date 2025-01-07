@@ -8,26 +8,48 @@ export const getAllMaterials = async () => {
     const url = `${BASE_URL}/odata?$select=*`;
 
     try {
-
         const response = await fetch(url, {
             method: 'GET',
-            headers: { 
+            headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         });
 
-        if (!response || !response.ok) { 
+        if (!response || !response.ok) {
             const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
             throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
         }
 
-        return await response.json(); 
+        const data = await response.json();
+
+        // Substituindo o campo `image` por Base64
+        const itemsWithBase64Images = await Promise.all(
+            data.items.map(async (item) => {
+                if (item.image) {
+                    try {
+                        const imageResponse = await getMaterialImageById(item.baseEntityId);
+                        return {
+                            ...item,
+                            image: imageResponse.image, // Substitui o campo image pelo valor em base64
+                        };
+                    } catch (error) {
+                        console.error(`Erro ao obter a imagem para o item ${item.baseEntityId}:`, error.message);
+                        return item; // Retorna o item original se houver erro ao obter a imagem
+                    }
+                } else {
+                    return item; // Retorna o item original se não tiver uma imagem
+                }
+            })
+        );
+
+        return { items: itemsWithBase64Images };
     } catch (error) {
         console.error("Erro ao obter todos os produtos:", error.message);
         throw new Error("Falha ao buscar produtos. Verifique o serviço e a URL.");
     }
 };
+
 
 export const getMaterialByKey = async (itemKey) => {
     const token = await getAccessToken();
