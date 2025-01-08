@@ -1,6 +1,6 @@
 // routes/invoicesRoute.js
 import express from 'express';
-import { getAllinvoices, getInvoiceByParamsController, getInvoiceByIDController, getInvoiceReportController} from '../controllers/jasminController.js';
+import { getAllinvoices, getInvoiceByParamsController, getInvoiceByIDController, getInvoiceReportController} from '../controllers/invoicesController.js';
 
 const router = express.Router();
 

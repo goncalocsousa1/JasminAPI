@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllMaterialsController, getMaterialByIdController, getMaterialByKeyController, getMaterialImageByIdController } from '../controllers/jasminController.js';
+import { getAllMaterialsController, getMaterialByIdController, getMaterialByKeyController, getMaterialImageByIdController } from '../controllers/materialsController.js';
 
 const router = express.Router();
 

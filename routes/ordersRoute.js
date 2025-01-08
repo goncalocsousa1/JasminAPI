@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllOrdersController, getOrderByParamsController, createOrderController } from '../controllers/jasminController.js';
+import { getAllOrdersController, getOrderByParamsController, createOrderController } from '../controllers/ordersController.js';
 
 const router = express.Router();
 

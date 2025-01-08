@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllClientsController , getClientByKeyController, createClientController} from '../controllers/jasminController.js';
+import { getAllClientsController , getClientByKeyController, createClientController} from '../controllers/clientsController.js';
 
 const router = express.Router();
 
