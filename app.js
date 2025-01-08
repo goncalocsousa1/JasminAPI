@@ -7,7 +7,7 @@ import ordersRoute from './routes/ordersRoute.js';
 import  clientsRoute from './routes/clientsRoute.js';
 import  materialsRoute from './routes/materialsRoute.js';
 import  purchasesRoute from './routes/purchasesRoute.js';
-
+import  salesRoute from './routes/salesRoute.js';
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,9 +23,10 @@ app.use('/orders', ordersRoute);
 app.use('/clients', clientsRoute);
 //Rota para ir buscar item
 app.use('/materials', materialsRoute);
-//api para ir buscar informações dos clientes
-// Usa o roteador montado para a rota /invoices
+// Usa o roteador montado para a rota /purchases
 app.use('/purchases', purchasesRoute);
+// Usa o roteador montado para a rota /sales
+app.use('/sales', salesRoute);
 const port = 9090;
 app.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);

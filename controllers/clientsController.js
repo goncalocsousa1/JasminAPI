@@ -8,6 +8,7 @@ export const getAllClientsController = async (req, res) => {
         res.status(500).json({ message: 'Erro ao buscar clientes!', error: error.message });
     }
 };
+
 export const getClientByKeyController = async (req, res) => {
     const { key } = req.params;  
 
