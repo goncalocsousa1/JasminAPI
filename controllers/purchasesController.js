@@ -1,4 +1,4 @@
-import { getAllOrdersPurchases, getOrdersPurchasesByID } from "../services/purchases.js";
+import { getAllOrdersPurchases, getOrdersPurchasesByID, postPurchaseOrder} from "../services/purchases.js";
 
 export const getAllOrdersPurchasesController = async (req, res) => {
     try {
@@ -21,7 +21,7 @@ export const getAllOrdersPurchasesIDController = async (req, res) => {
 export const createOrderPurchaseController = async (req, res) => {
     const orderData = req.body;  
     try {
-        const newOrder = await postOrder(orderData);  
+        const newOrder = await postPurchaseOrder(orderData);  
         res.status(201).json(newOrder);     
     } catch (error) {
         res.status(500).json({ message: 'Erro ao criar a encomenda!', error: error.message });

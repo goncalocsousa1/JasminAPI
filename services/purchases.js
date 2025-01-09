@@ -73,7 +73,7 @@ export const postPurchaseOrder = async (orderData) => {
         if (!response.ok) {
             const errorDetail = await response.json().catch(() => response.text()); 
             const errorMessage = errorDetail?.message || `Erro desconhecido: ${response.status}`;
-            throw new Error(`Erro ao criar o pedido de vendas: ${response.status} - ${errorMessage}`);
+            throw new Error(`Erro ao criar o pedido de encomenda: ${response.status} - ${errorMessage}`);
         }
 
         return await response.json(); 
