@@ -1,4 +1,5 @@
 import { getAccessToken } from '../scripts/token.js';
+import { getAllSalesItem } from './sales.js';
 
 const BASE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}/materialscore/materialsitems`;
 const IMAGE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}/businesscore/items`;
@@ -8,42 +9,56 @@ export const getAllMaterials = async () => {
     const url = `${BASE_URL}/odata?$select=*`;
 
     try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
+        // Obtém os materiais e os dados de vendas em paralelo
+        const [materialsResponse, salesData] = await Promise.all([
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            }),
+            getAllSalesItem()
+        ]);
 
-        if (!response || !response.ok) {
-            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
-            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        if (!materialsResponse || !materialsResponse.ok) {
+            const errorDetail = materialsResponse ? await materialsResponse.text() : 'Nenhuma resposta do servidor';
+            throw new Error(`Erro na resposta: ${materialsResponse?.status || 'desconhecido'} - ${errorDetail}`);
         }
 
-        const data = await response.json();
+        const materialsData = await materialsResponse.json();
 
-        // Substituindo o campo `image` por Base64
-        const itemsWithBase64Images = await Promise.all(
-            data.items.map(async (item) => {
+        // Cria um mapa dos preços por baseEntityId, pegando apenas o primeiro preço
+        const pricesMap = new Map(
+            salesData.items.map(item => [
+                item.baseEntityId,
+                item.priceListLines[0]?.priceAmountAmount || 0 // Pega apenas o primeiro preço ou 0 se não existir
+            ])
+        );
+
+        // Processa imagens e adiciona preços
+        const itemsWithImagesAndPrices = await Promise.all(
+            materialsData.items.map(async (item) => {
+                let updatedItem = { ...item };
+
+                // Adiciona imagem se existir
                 if (item.image) {
                     try {
                         const imageResponse = await getMaterialImageById(item.baseEntityId);
-                        return {
-                            ...item,
-                            image: imageResponse.image, // Substitui o campo image pelo valor em base64
-                        };
+                        updatedItem.image = imageResponse.image;
                     } catch (error) {
                         console.error(`Erro ao obter a imagem para o item ${item.baseEntityId}:`, error.message);
-                        return item; // Retorna o item original se houver erro ao obter a imagem
                     }
-                } else {
-                    return item; // Retorna o item original se não tiver uma imagem
                 }
+
+                // Adiciona o preço
+                updatedItem.price = pricesMap.get(item.baseEntityId) || 0;
+
+                return updatedItem;
             })
         );
 
-        return { items: itemsWithBase64Images };
+        return { items: itemsWithImagesAndPrices };
     } catch (error) {
         console.error("Erro ao obter todos os produtos:", error.message);
         throw new Error("Falha ao buscar produtos. Verifique o serviço e a URL.");

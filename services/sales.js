@@ -1,10 +1,10 @@
 import { getAccessToken } from '../scripts/token.js';
 
-const BASE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}/salesCore/salesItems/extension`;
+const BASE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}/salesCore/salesItems/extension/`;
 
 export const getAllSalesItem = async () => {
     const token = await getAccessToken();
-    const url = `${BASE_URL}/odata?select=*`;
+    const url = `${BASE_URL}/oData?$select=baseEntityId,itemKey&$expand=priceListLines($select=priceAmountAmount)`;
 
     try {
 
