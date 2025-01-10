@@ -82,3 +82,27 @@ export const postPurchaseOrder = async (orderData) => {
         throw new Error("Falha ao enviar o pedido de encomenda. Verifique os dados e o serviço.");
     }
 };
+export const deletePurchase  = async (companyKey, documentType, year, month) => {
+    const token = await getAccessToken();  
+    const url = `${BASE_URL}/${companyKey}/${documentType}/${year}/${month}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response || !response.ok) {
+            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
+            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        }
+
+        return { message: 'Encomenda de fornecedor eliminada com sucesso!' }; 
+    } catch (error) {
+        console.error("Erro ao eliminar encomenda específica.:", error.message);
+        throw new Error("Falha ao buscar encomenda específica. Verifique o serviço e a URL.");
+    }
+};
