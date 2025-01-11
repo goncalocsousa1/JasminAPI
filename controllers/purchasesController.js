@@ -1,4 +1,4 @@
-import { getAllOrdersPurchases, getOrdersPurchasesByID, postPurchaseOrder, deletePurchase} from "../services/purchases.js";
+import { getAllOrdersPurchases, getOrdersPurchasesByID, postPurchaseOrder, deletePurchase, getAllSuppliers} from "../services/purchases.js";
 
 export const getAllOrdersPurchasesController = async (req, res) => {
     try {
@@ -36,5 +36,13 @@ export const deletePurchaseByParamsController = async (req, res) => {
         res.status(200).json(deletedOrder); 
     } catch (error) {
         res.status(500).json({ message: 'Erro ao eliminar encomenda específica!', error: error.message });
+    }
+};
+export const getAllSuppliersController = async (req, res) => {
+    try {
+        const Items = await getAllSuppliers(); 
+        res.status(200).json(Items);  
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar os fornecedores!', error: error.message });
     }
 };

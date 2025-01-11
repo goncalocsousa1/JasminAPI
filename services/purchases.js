@@ -106,3 +106,28 @@ export const deletePurchase  = async (companyKey, documentType, year, month) => 
         throw new Error("Falha ao buscar encomenda específica. Verifique o serviço e a URL.");
     }
 };
+export const getAllSuppliers  = async () => {
+    const token = await getAccessToken();  
+    const url = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}/purchasesCore/supplierParties/extension/odata?$select=*`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response || !response.ok) {
+            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
+            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        }
+
+        return await response.json(); 
+    } catch (error) {
+        console.error("Erro ao ir buscar os fornecedores:", error.message);
+        throw new Error("Erro ao ir buscar os fornecedores. Verifique o serviço e a URL.");
+    }
+};
+
