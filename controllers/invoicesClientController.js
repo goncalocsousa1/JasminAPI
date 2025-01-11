@@ -1,4 +1,4 @@
-import { getAllInvoices, getInvoiceByParams, getInvoiceByID, getInvoiceReport } from "../services/invoices.js";
+import { getAllInvoices, getInvoiceByParams, getInvoiceByID, getInvoiceReport } from "../services/invoicesClient.js";
 
 export const getAllinvoices = async (req, res) => {
     try {
