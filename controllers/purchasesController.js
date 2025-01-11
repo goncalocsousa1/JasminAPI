@@ -1,4 +1,4 @@
-import { getAllOrdersPurchases, getOrdersPurchasesByID, postPurchaseOrder} from "../services/purchases.js";
+import { getAllOrdersPurchases, getOrdersPurchasesByID, postPurchaseOrder, deletePurchase} from "../services/purchases.js";
 
 export const getAllOrdersPurchasesController = async (req, res) => {
     try {
@@ -25,5 +25,16 @@ export const createOrderPurchaseController = async (req, res) => {
         res.status(201).json(newOrder);     
     } catch (error) {
         res.status(500).json({ message: 'Erro ao criar a encomenda!', error: error.message });
+    }
+};
+
+export const deletePurchaseByParamsController = async (req, res) => {
+    const { companyKey, documentType, year, month } = req.params;
+
+    try {
+        const deletedOrder = await deletePurchase(companyKey, documentType, year, month); 
+        res.status(200).json(deletedOrder); 
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao eliminar encomenda específica!', error: error.message });
     }
 };
