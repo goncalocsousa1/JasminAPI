@@ -5,29 +5,48 @@ const IMAGE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${pro
 
 export const getAllMaterials = async () => {
     const token = await getAccessToken();
-    const url = `${BASE_URL}/odata`;
+    const materialsUrl = `${BASE_URL}/odata`;
+    const salesItemsUrl = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}/salesCore/salesItems/extension/odata`;
 
     try {
-        const materialsResponse = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
+        const [materialsResponse, salesItemResponse] = await Promise.all([
+            fetch(materialsUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            }),
+            fetch(salesItemsUrl, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            }),
+        ]);
 
         if (!materialsResponse.ok) {
             const errorDetail = await materialsResponse.text();
-            throw new Error(`Erro na resposta: ${materialsResponse.status} - ${errorDetail}`);
+            throw new Error(`Erro na resposta dos materiais: ${materialsResponse.status} - ${errorDetail}`);
+        }
+
+        if (!salesItemResponse.ok) {
+            const errorDetail = await salesItemResponse.text();
+            throw new Error(`Erro na resposta dos itens de vendas: ${salesItemResponse.status} - ${errorDetail}`);
         }
 
         const materialsData = await materialsResponse.json();
+        const salesData = await salesItemResponse.json();
 
-        const pricesMap = new Map(
-            materialsData.items.map(item => [
-                item.baseEntityId,
-                item.lastUnitCostAmount || 0
-            ])
+        const salesPricesMap = new Map(
+            salesData.items.map(item => {
+                const priceItem = item.priceListLines && item.priceListLines[0];
+                return [
+                    item.baseEntityId,
+                    priceItem ? priceItem.priceAmountAmount : 0
+                ];
+            })
         );
 
         const itemsWithImagesAndPrices = await Promise.all(
@@ -37,8 +56,8 @@ export const getAllMaterials = async () => {
                 updatedItem.itemKey = item.itemKey || null;
                 updatedItem.maxStock = item.maxStock || 0; 
                 updatedItem.stockBalance = (item.materialsItemWarehouses && item.materialsItemWarehouses[0]) 
-                ? item.materialsItemWarehouses[0].stockBalance 
-                : 0; 
+                    ? item.materialsItemWarehouses[0].stockBalance 
+                    : 0; 
                 updatedItem.minStock = item.minStock || 0;
                 updatedItem.description = item.description || '';
                 updatedItem.availableInSales = item.availableInSales || false;
@@ -52,9 +71,10 @@ export const getAllMaterials = async () => {
                 updatedItem.isActive = item.isActive || false;
                 updatedItem.createdBy = item.createdBy || '';
                 updatedItem.createdOn = item.createdOn || null;
-                updatedItem.price  = (item.materialsItemWarehouses && item.materialsItemWarehouses[0]) 
-                ? item.materialsItemWarehouses[0].calculatedUnitCostAmount 
-                : 0;
+
+                updatedItem.price = salesPricesMap.get(item.baseEntityId) || 0;
+
+                // Adiciona imagem
                 if (item.baseEntityId) {
                     try {
                         const imageResponse = await getMaterialImageById(item.baseEntityId);
@@ -63,7 +83,6 @@ export const getAllMaterials = async () => {
                         updatedItem.image = null;
                     }
                 }
-
 
                 return updatedItem;
             })
@@ -75,9 +94,6 @@ export const getAllMaterials = async () => {
         throw new Error("Falha ao buscar produtos. Verifique o serviço e a URL.");
     }
 };
-
-
-
 
 export const getMaterialByKey = async (itemKey) => {
     const token = await getAccessToken();
