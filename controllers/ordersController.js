@@ -21,9 +21,28 @@ export const getOrderByParamsController = async (req, res) => {
 
 export const createOrderController = async (req, res) => {
     const orderData = req.body;  
-
+    console.log(orderData);
     try {
-        const newOrder = await postOrder(orderData);  
+
+        const newOrderObj = {
+            "company": "Default",
+            "buyerCustomerParty": orderData.buyerCustomerParty,
+            "deliveryTerm": orderData.deliveryTerm, 
+            "documentLines": [ 
+                {
+                    "salesItem": orderData.salesItem, 
+                    "quantity": orderData.quantity,
+                    "unitPrice": {
+                        "amount": orderData.amount,
+                        "baseAmount": orderData.amount,
+                        "reportingAmount": orderData.amount,
+                        "fractionDigits": orderData.fractionDigits,
+                        "symbol": orderData.symbol
+                    }
+                }
+            ]
+        }
+        const newOrder = await postOrder(newOrderObj);  
         res.status(201).json(newOrder);     
     } catch (error) {
         res.status(500).json({ message: 'Erro ao criar a encomenda!', error: error.message });
