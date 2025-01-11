@@ -22,11 +22,12 @@ export const getClientByKeyController = async (req, res) => {
 
 export const createClientController = async (req,res) => {
     const clientData = req.body;  
-
+    console.error("Client", req.body);
     try {
         const newClient= await createClient(clientData);  
         res.status(201).json(newClient);     
     } catch (error) {
+        console.error("Erro ao criar cliente:", req.body, error.message);
         res.status(500).json({ message: 'Erro ao criar cliente!', error: error.message });
     }
 
