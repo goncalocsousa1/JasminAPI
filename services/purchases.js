@@ -25,7 +25,7 @@ export const getAllOrdersPurchases = async () => {
     } catch (error) {
         console.error("Erro ao obter todas as encomendas:", error.message);
         throw new Error("Falha ao buscar encomendas. Verifique o serviço e a URL.");
-    }
+    }   
 };
 
 export const getOrdersPurchasesByID = async (ID) => {
@@ -47,12 +47,15 @@ export const getOrdersPurchasesByID = async (ID) => {
             throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
         }
 
-        return await response.json();
+        const data = await response.json();
+
+        return data.naturalKey;
     } catch (error) {
-        console.error("Erro ao obter encomenda específica:", error.message);
-        throw new Error("Falha ao buscar encomenda específica. Verifique o serviço e a URL.");
+        console.error("Erro ao obter encomenda específica por id:", error.message);
+        throw new Error("Falha ao buscar encomenda específica por id. Verifique o serviço e a URL.");
     }
 };
+
 export const postPurchaseOrder = async (orderData) => {
     const token = await getAccessToken();
 

@@ -12,9 +12,10 @@ export const getAllOrdersPurchasesIDController = async (req, res) => {
     const { ID } = req.params;  
     try {
         const Items = await getOrdersPurchasesByID(ID); 
+        
         res.status(200).json(Items);  
     } catch (error) {
-        res.status(500).json({ message: 'Erro ao buscar Purchases!', error: error.message });
+        res.status(500).json({ message: 'Erro ao buscar Purchases pelo id!', error: error.message });
     }
 };
 
@@ -45,4 +46,4 @@ export const getAllSuppliersController = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Erro ao buscar os fornecedores!', error: error.message });
     }
-};
+};                                           

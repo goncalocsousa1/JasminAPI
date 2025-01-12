@@ -125,7 +125,7 @@ export const getOrdersByID = async (id) => {
 
         const data = await response.json();
 
-        return { naturalKey: data.naturalKey };
+        return data.naturalKey;
     } catch (error) {
         console.error("Erro ao obter encomenda específica por id:", error.message);
         throw new Error("Falha ao buscar encomenda específica por id. Verifique o serviço e a URL.");
