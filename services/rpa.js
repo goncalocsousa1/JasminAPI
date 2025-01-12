@@ -17,7 +17,7 @@ export const enviarFatura = async (nomeFatura, email) => {
         console.log(process.env.ORGANIZATION_UNIT_ID);
         const bodyData = {
             startInfo: {
-                ReleaseKey: process.env.RELEASE_KEY,
+                ReleaseKey: process.env.RELEASE_KEY_INVOICE,
                 Strategy: "ModernJobsCount",
                 RobotIds: [],
                 NoOfRobots: 1,
@@ -59,16 +59,14 @@ export const enviarFatura = async (nomeFatura, email) => {
 
 export const enviarRecibo = async (nomeRecibo, email) => {
     try {
-        // Obtém o token de autenticação
         const token = await getUiPathAccessToken();
         if (!token) {
             throw new Error("Não foi possível obter o token de autenticação");
         }
 
-        // Configura o body da requisição
         const bodyData = {
             startInfo: {
-                ReleaseKey: process.env.RELEASE_KEY,
+                ReleaseKey: process.env.RELEASE_KEY_RECEIPT,
                 Strategy: "ModernJobsCount",
                 RobotIds: [],
                 NoOfRobots: 1,
@@ -79,7 +77,6 @@ export const enviarRecibo = async (nomeRecibo, email) => {
             }
         };
 
-        // Faz a requisição para o endpoint do UiPath
         const response = await fetch(BASE_URL, {
             method: 'POST',
             headers: {
@@ -90,15 +87,11 @@ export const enviarRecibo = async (nomeRecibo, email) => {
             body: JSON.stringify(bodyData)
         });
 
-        // Verificar status de resposta para identificar erros de autenticação
         if (response.status === 401) {
             throw new Error("Token de autenticação expirado ou inválido");
         }
-
-        // Captura a resposta como texto primeiro para verificar se estamos recebendo HTML
         const responseText = await response.text();
 
-        // Se a resposta não for JSON, isso pode ser um erro HTML
         try {
             const jsonResponse = JSON.parse(responseText);
             return jsonResponse;
