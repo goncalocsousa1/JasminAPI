@@ -1,9 +1,10 @@
 // routes/invoicesRoute.js
 import express from 'express';
-import { getAllinvoices, getInvoiceByParamsController, getInvoiceByIDController, getInvoiceReportController} from '../controllers/invoicesClientController.js';
+import { getAllinvoices, getInvoiceByParamsController, getInvoiceByIDController, getInvoiceReportController, generateReceiptController} from '../controllers/invoicesClientController.js';
 
 const router = express.Router();
 
+router.post('/receipts', generateReceiptController); // Rota para obter as faturas
 router.get('/', getAllinvoices); // Rota para obter as faturas
 router.get('/:companyKey/:documentType/:year/:month', getInvoiceByParamsController); // Rota para obter a fatura específica
 router.get('/:id/report', getInvoiceReportController); // Rota para obter o report da fatura específica

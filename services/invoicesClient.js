@@ -106,4 +106,28 @@ export const getInvoiceReport = async (id) => {
         throw new Error("Falha ao buscar o relatório da fatura. Verifique o serviço e a URL.");
     }
 };
+export const generateReceipts = async (data) => {
+    const token = await getAccessToken();
+    const url = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}/accountsReceivable/processOpenItems/generateReceipt`;
 
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            const errorDetail = await response.text();
+            throw new Error(`Erro na resposta: ${response.status} - ${errorDetail}`);
+        }
+
+        return await response.json(); 
+    } catch (error) {
+        console.error("Erro ao gerar recibo:", error.message);
+        throw new Error("Falha ao gerar recibo da fatura. Verifique o serviço e a URL.");
+    }
+};

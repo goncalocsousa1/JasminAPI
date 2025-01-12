@@ -1,4 +1,4 @@
-import { getAllInvoices, getInvoiceByParams, getInvoiceByID, getInvoiceReport } from "../services/invoicesClient.js";
+import { getAllInvoices, getInvoiceByParams, getInvoiceByID, getInvoiceReport, generateReceipts} from "../services/invoicesClient.js";
 
 export const getAllinvoices = async (req, res) => {
     try {
@@ -39,5 +39,21 @@ export const getInvoiceReportController = async (req, res) => {
     } catch (error) {
         console.error("Erro ao buscar o relatório da fatura:", error.message);
         res.status(500).json({ message: 'Erro ao buscar o relatório da fatura!', error: error.message });
+    }
+};
+
+export const generateReceiptController = async (req, res) => {
+    const data = req.body;
+
+    if (!data || Object.keys(data).length === 0) {
+        return res.status(400).json({ message: 'Dados inválidos ou ausentes no corpo da requisição!' });
+    }
+
+    try {
+        const generatedReceipts = await generateReceipts(data);
+        res.status(200).json(generatedReceipts);
+    } catch (error) {
+        console.error("Erro ao gerar recibo:", error.message);
+        res.status(500).json({ message: 'Erro ao gerar recibo para a fatura!', error: error.message });
     }
 };
