@@ -11,6 +11,8 @@ import  salesRoute from './routes/salesRoute.js';
 import processordersRoute  from './routes/processordersRoute.js';
 import processsalesRoute from './routes/processsalesRoute.js';
 import  invoicesRouteSupplier from './routes/invoicesSupplierRoute.js';
+import rparoute from './routes/rparoutes.js';
+
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,6 +38,9 @@ app.use('/purchases', purchasesRoute);
 app.use('/processPurchases', processordersRoute);
 // Usa o roteador montado para a rota /salesItems
 app.use('/salesItems', salesRoute);
+//Usa o roteador montado para a rota /uipath
+app.use('/uipath', rparoute); 
+
 const port = 9090;
 app.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);
