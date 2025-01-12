@@ -131,4 +131,30 @@ export const generateReceipts = async (data) => {
         throw new Error("Falha ao gerar recibo da fatura. Verifique o serviço e a URL.");
     }
 };
+export const getInvoiceNatualKeyByID = async (id) => {
+    const token = await getAccessToken();
 
+    const url = `${BASE_URL}/${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response || !response.ok) {
+            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
+            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        }
+
+        const data = await response.json();
+
+        return data.naturalKey;
+    } catch (error) {
+        console.error("Erro ao obter fatura específica:", error.message);
+        throw new Error("Falha ao buscar fatura específica. Verifique o serviço e a URL.");
+    }
+};

@@ -1,4 +1,4 @@
-import { getAllInvoices, getInvoiceByParams, getInvoiceByID, getInvoiceReport, generateReceipts} from "../services/invoicesClient.js";
+import { getAllInvoices, getInvoiceByParams, getInvoiceByID, getInvoiceReport, generateReceipts, getInvoiceNatualKeyByID} from "../services/invoicesClient.js";
 
 export const getAllinvoices = async (req, res) => {
     try {
@@ -55,5 +55,14 @@ export const generateReceiptController = async (req, res) => {
     } catch (error) {
         console.error("Erro ao gerar recibo:", error.message);
         res.status(500).json({ message: 'Erro ao gerar recibo para a fatura!', error: error.message });
+    }
+};
+export const getInvoiceNaturalKeyByIDController = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const invoice = await getInvoiceNatualKeyByID(id); 
+        res.status(200).json(invoice); 
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar fatura!', error: error.message });
     }
 };
