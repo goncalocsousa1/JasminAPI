@@ -5,8 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const BASE_URL = "https://cloud.uipath.com/iegknhvui/DefaultTenant/orchestrator_/odata/Jobs/UiPath.Server.Configuration.OData.StartJobs";
-const ORGANIZATION_UNIT_ID = "5900835";
-const RELEASE_KEY = "ce8376ce-3252-408c-99c7-e154afaadc65";
+
 
 export const enviarFatura = async (nomeFatura, email) => {
     try {
@@ -15,10 +14,10 @@ export const enviarFatura = async (nomeFatura, email) => {
         if (!token) {
             throw new Error("Não foi possível obter o token de autenticação");
         }
-
+        console.log(process.env.ORGANIZATION_UNIT_ID);
         const bodyData = {
             startInfo: {
-                ReleaseKey: RELEASE_KEY,
+                ReleaseKey: process.env.RELEASE_KEY,
                 Strategy: "ModernJobsCount",
                 RobotIds: [],
                 NoOfRobots: 1,
@@ -34,7 +33,7 @@ export const enviarFatura = async (nomeFatura, email) => {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
-                'X-UIPATH-OrganizationUnitId': ORGANIZATION_UNIT_ID
+                'X-UIPATH-OrganizationUnitId': process.env.ORGANIZATION_UNIT_ID
             },
             body: JSON.stringify(bodyData)
         });
@@ -49,6 +48,66 @@ export const enviarFatura = async (nomeFatura, email) => {
         }
 
         return await response.json();
+    } catch (error) {
+        console.error("Erro ao iniciar job RPA:", error.message);
+        if (error.message.includes("token")) {
+            throw new Error("Erro de autenticação. Por favor, verifique as credenciais.");
+        }
+        throw new Error("Falha ao iniciar o processo RPA. Verifique as configurações e tente novamente.");
+    }
+};
+
+export const enviarRecibo = async (nomeRecibo, email) => {
+    try {
+        // Obtém o token de autenticação
+        const token = await getUiPathAccessToken();
+        if (!token) {
+            throw new Error("Não foi possível obter o token de autenticação");
+        }
+
+        // Configura o body da requisição
+        const bodyData = {
+            startInfo: {
+                ReleaseKey: process.env.RELEASE_KEY,
+                Strategy: "ModernJobsCount",
+                RobotIds: [],
+                NoOfRobots: 1,
+                InputArguments: JSON.stringify({
+                    NomeRecibo: nomeRecibo,
+                    Email: email
+                })
+            }
+        };
+
+        // Faz a requisição para o endpoint do UiPath
+        const response = await fetch(BASE_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'X-UIPATH-OrganizationUnitId': process.env.ORGANIZATION_UNIT_ID
+            },
+            body: JSON.stringify(bodyData)
+        });
+
+        // Verificar status de resposta para identificar erros de autenticação
+        if (response.status === 401) {
+            throw new Error("Token de autenticação expirado ou inválido");
+        }
+
+        // Captura a resposta como texto primeiro para verificar se estamos recebendo HTML
+        const responseText = await response.text();
+
+        // Se a resposta não for JSON, isso pode ser um erro HTML
+        try {
+            const jsonResponse = JSON.parse(responseText);
+            return jsonResponse;
+        } catch (parseError) {
+            console.error("Erro ao interpretar resposta JSON:", parseError.message);
+            console.error("Conteúdo da resposta:", responseText);
+            throw new Error("A resposta do servidor não é válida JSON.");
+        }
+
     } catch (error) {
         console.error("Erro ao iniciar job RPA:", error.message);
         if (error.message.includes("token")) {
