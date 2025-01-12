@@ -103,3 +103,31 @@ export const deleteOrder  = async (companyKey, documentType, year, month) => {
         throw new Error("Falha ao buscar encomenda específica. Verifique o serviço e a URL.");
     }
 };
+
+export const getOrdersByID = async (id) => {
+    const token = await getAccessToken();
+
+    const url = `${BASE_URL}/${id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response || !response.ok) {
+            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
+            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        }
+
+        const data = await response.json();
+
+        return { naturalKey: data.naturalKey };
+    } catch (error) {
+        console.error("Erro ao obter encomenda específica por id:", error.message);
+        throw new Error("Falha ao buscar encomenda específica por id. Verifique o serviço e a URL.");
+    }
+};

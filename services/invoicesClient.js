@@ -4,7 +4,7 @@ const BASE_URL = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${proc
 
 export const getAllInvoices = async () => {
     const token = await getAccessToken();
-    const url = `${BASE_URL}/odata?$select=id,postingDate,buyerCustomerPartyName,accountingPartyTaxId,payableAmountAmount`;
+    const url = `${BASE_URL}/odata?$select=id,naturalKey,postingDate,buyerCustomerPartyName,accountingPartyTaxId,payableAmountAmount`;
 
     try {
 
@@ -131,3 +131,4 @@ export const generateReceipts = async (data) => {
         throw new Error("Falha ao gerar recibo da fatura. Verifique o serviço e a URL.");
     }
 };
+

@@ -1,4 +1,4 @@
-import { getAllOrders, getOrdersByParams, postOrder, deleteOrder} from "../services/order.js";
+import { getAllOrders, getOrdersByParams, postOrder, deleteOrder, getOrdersByID} from "../services/order.js";
 
 export const getAllOrdersController = async (req, res) => {
     try {
@@ -56,5 +56,17 @@ export const deleteOrderByParamsController = async (req, res) => {
         res.status(200).json(deletedOrder); 
     } catch (error) {
         res.status(500).json({ message: 'Erro ao eliminar encomenda específica!', error: error.message });
+    }
+};
+
+
+export const getOrderByIDController = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const order = await getOrdersByID(id); 
+        res.status(200).json(order); 
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar encomenda por id!', error: error.message });
     }
 };
