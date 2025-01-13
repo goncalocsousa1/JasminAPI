@@ -48,9 +48,30 @@ export const generateReceiptController = async (req, res) => {
     if (!data || Object.keys(data).length === 0) {
         return res.status(400).json({ message: 'Dados inválidos ou ausentes no corpo da requisição!' });
     }
+    console.log(data);
+    const newReceiptObj = {
+        "company": data.company,
+        "documentType": data.documentType,
+        "documentDate": data.documentDate,
+        "postingDate": data.postingDate,
+        "financialAccount": data.financialAccount,
+        "note": data.note,
+        "party": data.party,
+        "currency": data.currency,
+        "exchangeRate": data.exchangeRate,
+        "paymentMethod": data.paymentMethod,
+        "checkNumber": "",
+        "openAccountPostingLines": [
+            {
+                "sourceDoc": data.sourceDoc,
+                "settled": data.settled,
+                "discount": data.discount
+            }
+        ]
+    }; 
 
     try {
-        const generatedReceipts = await generateReceipts(data);
+        const generatedReceipts = await generateReceipts(newReceiptObj);
         res.status(200).json(generatedReceipts);
     } catch (error) {
         console.error("Erro ao gerar recibo:", error.message);
