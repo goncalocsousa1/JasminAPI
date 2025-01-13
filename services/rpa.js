@@ -14,7 +14,6 @@ export const enviarFatura = async (nomeFatura, email) => {
         if (!token) {
             throw new Error("Não foi possível obter o token de autenticação");
         }
-        console.log(process.env.ORGANIZATION_UNIT_ID);
         const bodyData = {
             startInfo: {
                 ReleaseKey: process.env.RELEASE_KEY_INVOICE,
