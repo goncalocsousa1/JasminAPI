@@ -1,4 +1,4 @@
-import { getAllInvoices, getInvoiceByParams, getInvoiceByID, getInvoiceReport } from "../services/invoicesSupplier.js";
+import { getAllInvoices, getInvoiceByParams, getInvoiceByID, getInvoiceReport, getInvoiceByIDNaturalKey } from "../services/invoicesSupplier.js";
 
 export const getAllinvoices = async (req, res) => {
     try {
@@ -41,3 +41,14 @@ export const getInvoiceReportController = async (req, res) => {
         res.status(500).json({ message: 'Erro ao buscar o relatório da fatura!', error: error.message });
     }
 };
+
+export const getInvoiceByIDNaturalKeyController = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const invoice = await getInvoiceByIDNaturalKey(id); 
+        res.status(200).json(invoice); 
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar o natural key da fatura!', error: error.message });
+    }
+};
+
