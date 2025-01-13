@@ -158,3 +158,37 @@ export const getInvoiceNatualKeyByID = async (id) => {
         throw new Error("Falha ao buscar fatura específica. Verifique o serviço e a URL.");
     }
 };
+
+export const getReceiptNaturalKeyByID = async (id) => {
+    const token = await getAccessToken();
+
+    const url = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}/accountsReceivable/receipts/odata`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response || !response.ok) {
+            const errorDetail = response ? await response.text() : 'Nenhuma resposta do servidor';
+            throw new Error(`Erro na resposta: ${response?.status || 'desconhecido'} - ${errorDetail}`);
+        }
+
+        const data = await response.json();
+
+        const receipt = data.items?.find(item => item.id === id);
+
+        if (!receipt) {
+            throw new Error(`Recibo com o ID ${id} não encontrado.`);
+        }
+
+        return receipt.naturalKey;
+    } catch (error) {
+        console.error("Erro ao obter recibo específico:", error.message);
+        throw new Error("Falha ao buscar recibo específico. Verifique o serviço e a URL.");
+    }
+};
