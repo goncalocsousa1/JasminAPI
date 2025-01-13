@@ -21,8 +21,34 @@ export const getAllOrdersPurchasesIDController = async (req, res) => {
 
 export const createOrderPurchaseController = async (req, res) => {
     const orderData = req.body;  
+    const newOrderObj = {
+        "company": orderData.company,
+        "documentType": orderData.documentType,
+        "sellerSupplierParty": orderData.sellerSupplierParty,
+        "SellerSupplierPartyName": orderData.SellerSupplierPartyName,
+        "documentDate": "2025-01-19T04:10:22.154Z",
+        "deliveryTerm": orderData.deliveryTerm,
+        "PaymentMethod": orderData.PaymentMethod,
+        "PaymentTerm": orderData.PaymentTerm,
+        "LoadingCountry": orderData.LoadingCountry,
+        "AccountingParty": orderData.AccountingParty,
+        "documentLines": [
+          {
+            "purchasesItem": orderData.purchasesItem,
+            "quantity": orderData.quantity,
+            "unitPrice": {
+              "amount": orderData.amount,
+              "baseAmount": orderData.baseAmount,
+              "reportingAmount": orderData.reportingAmount,
+              "fractionDigits": orderData.fractionDigits,
+              "symbol": orderData.symbol
+            }
+          }
+        ]
+      }
+
     try {
-        const newOrder = await postPurchaseOrder(orderData);  
+        const newOrder = await postPurchaseOrder(newOrderObj);  
         res.status(201).json(newOrder);     
     } catch (error) {
         res.status(500).json({ message: 'Erro ao criar a encomenda!', error: error.message });
