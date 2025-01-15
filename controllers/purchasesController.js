@@ -21,6 +21,7 @@ export const getAllOrdersPurchasesIDController = async (req, res) => {
 
 export const createOrderPurchaseController = async (req, res) => {
     const orderData = req.body;  
+    
     const newOrderObj = {
         "company": orderData.company,
         "documentType": orderData.documentType,
@@ -46,6 +47,14 @@ export const createOrderPurchaseController = async (req, res) => {
           }
         ]
       }
+
+      console.log(newOrderObj);
+
+      newOrderObj.documentLines.forEach(line => {
+        console.log(line.unitPrice.amount);
+        console.log(line.unitPrice.baseAmount);
+        console.log(line.unitPrice.reportingAmount);
+    });
 
     try {
         const newOrder = await postPurchaseOrder(newOrderObj);  

@@ -1,6 +1,7 @@
 import { enviarFatura, enviarRecibo } from '../services/rpa.js';
 
 export const faturaController = async (req, res) => {
+    console.log(req.body);
     try {
         const { nomeFatura, email } = req.body;
         
@@ -21,6 +22,7 @@ export const faturaController = async (req, res) => {
 };
 
 export const reciboController = async (req, res) => {
+    console.log(req.body);
     try {
         const { nomeRecibo, email } = req.body;
         
